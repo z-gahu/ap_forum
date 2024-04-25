@@ -5,6 +5,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 const methodOverride = require("method-override");
 const bcrypt = require("bcrypt");
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const MongoStore = require("connect-mongo");
 
 app.use(methodOverride("_method"));
 app.set("view engine", "ejs");
@@ -13,10 +17,6 @@ app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const session = require("express-session");
-const passport = require("passport");
-const LocalStrategy = require("passport-local");
-
 app.use(passport.initialize());
 app.use(
   session({
@@ -24,6 +24,10 @@ app.use(
     resave: false, // 유저가 서버로 요청할 때마다 세션갱신할지 여부
     saveUninitialized: false, // 로그인을 안해도 세션을 만들지 여부
     cookie: { maxAge: 60 * 60 * 1000 }, // 세션유지시간
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URL,
+      dbName: "forum",
+    }),
   })
 );
 app.use(passport.session());
