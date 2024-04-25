@@ -19,6 +19,7 @@ app.use(
     secret: process.env.SESSION_SECRET_KEY,
     resave: false, // 유저가 서버로 요청할 때마다 세션갱신할지 여부
     saveUninitialized: false, // 로그인을 안해도 세션을 만들지 여부
+    cookie: { maxAge: 60 * 60 * 1000 }, // 세션유지시간
   })
 );
 app.use(passport.session());
@@ -249,4 +250,15 @@ app.post("/login", async (요청, 응답, next) => {
 app.get("/login", async (요청, 응답) => {
   console.log(요청.user);
   응답.render("login.ejs");
+});
+
+app.get("/register", (요청, 응답) => {
+  응답.render("register.ejs");
+});
+
+app.post("/register", async (요청, 응답) => {
+  await db.collection("user").insertOne({
+    username: 요청.body.username,
+    password: 요청.body.password,
+  });
 });
