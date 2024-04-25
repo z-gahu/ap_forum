@@ -207,6 +207,27 @@ passport.use(
   })
 );
 
+// 로그인시 세션만들기
+passport.serializeUser((user, done) => {
+  console.log("user:", user);
+  process.nextTick(() => {
+    // 내부코드를 비동기적으로 처리해줌
+    done(null, { id: user._id, username: user.username }); // 요청.logIn()을 쓰면 자동실행됨
+  }); // 위 내용을 적어서 세션 document를 DB or 메모리에 발행해줌
+});
+
+// 쿠키를 분석해주는 역할
+passport.deserializeUser(async (user, done) => {
+  let result = await db
+    .collection("user")
+    .findOne({ _id: new ObjectId(user.id) });
+  delete result.password;
+  // 쿠키가 이상없으면 현재 로그인된 유저정보를 알려줌
+  process.nextTick(() => {
+    done(null, result); // result 에 넣은게 요청.user에 들어감
+  });
+});
+
 // 아이디/비번 외에 다른것도 제출받아서 검증가능 passReqToCallback 옵션
 // 실행하고 싶으면 passport.authenticate('local')() 사용
 
@@ -223,9 +244,9 @@ app.post("/login", async (요청, 응답, next) => {
   // - 콜백함수의 첫째 파라미터는 뭔가 에러시 뭔가 들어옴
   // - 둘째 파라미터는 아이디/비번 검증 완료된 유저정보가 들어옴
   // - 셋째는 아이디/비번 검증 실패시 에러메세지가 들어옴
-  응답.render("login.ejs");
 });
 
 app.get("/login", async (요청, 응답) => {
+  console.log(요청.user);
   응답.render("login.ejs");
 });
