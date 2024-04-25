@@ -1,8 +1,12 @@
 const express = require("express");
 const app = express();
+const { MongoClient, ObjectId } = require("mongodb");
 const dotenv = require("dotenv");
 dotenv.config();
+const methodOverride = require("method-override");
+const bcrypt = require("bcrypt");
 
+app.use(methodOverride("_method"));
 app.set("view engine", "ejs");
 
 app.use(express.static(__dirname + "/public"));
@@ -23,8 +27,6 @@ app.use(
   })
 );
 app.use(passport.session());
-
-const { MongoClient, ObjectId } = require("mongodb");
 
 let db;
 const url = process.env.MONGO_URL;
@@ -200,7 +202,9 @@ passport.use(
     if (!result) {
       return cb(null, false, { message: "아이디가 디비에 없음" }); // 회원인증 실패시엔 false를 넣어줘야함
     }
-    if (result.password == 입력한비번) {
+    // 비번 비교(저장된해싱된 패스워드 == 입력한 비번:해싱필요)
+    const 비번비교 = await bcrypt.compare(입력한비번, result.password);
+    if (비번비교) {
       return cb(null, result);
     } else {
       return cb(null, false, { message: "비번불일치" });
@@ -257,8 +261,12 @@ app.get("/register", (요청, 응답) => {
 });
 
 app.post("/register", async (요청, 응답) => {
+  let 해시 = await bcrypt.hash(요청.body.password, 10);
+  // console.log(해시);
+
   await db.collection("user").insertOne({
     username: 요청.body.username,
-    password: 요청.body.password,
+    password: 해시,
   });
+  응답.redirect("/");
 });
