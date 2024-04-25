@@ -268,9 +268,18 @@ app.post("/register", async (요청, 응답) => {
   let 해시 = await bcrypt.hash(요청.body.password, 10);
   // console.log(해시);
 
-  await db.collection("user").insertOne({
-    username: 요청.body.username,
-    password: 해시,
-  });
-  응답.redirect("/");
+  // 회원가입 시켜줄 때 중복 아이디로 가입하는걸 막고 싶다.
+  const user = await db
+    .collection("user")
+    .findOne({ username: 요청.body.username });
+  if (user) {
+    console.log("중복유저 있음");
+  } else {
+    console.log("중복유저 없음");
+    await db.collection("user").insertOne({
+      username: 요청.body.username,
+      password: 해시,
+    });
+    응답.redirect("/");
+  }
 });
