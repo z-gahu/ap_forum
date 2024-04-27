@@ -55,7 +55,9 @@ function checkLogin(요청, 응답, next) {
   next(); // 미들웨어 코드 실행 끝났으니 다음으로 이동해주세요
 }
 
-app.get("/", checkLogin, (요청, 응답) => {
+app.use(checkLogin); // 모든 api 에 미들웨어 적용
+
+app.get("/", (요청, 응답) => {
   // 함수(요청, 응답);
   응답.sendFile(__dirname + "/index.html");
 });
