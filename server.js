@@ -255,7 +255,7 @@ passport.deserializeUser(async (user, done) => {
 // 아이디/비번 외에 다른것도 제출받아서 검증가능 passReqToCallback 옵션
 // 실행하고 싶으면 passport.authenticate('local')() 사용
 
-app.post("/login", async (요청, 응답, next) => {
+app.post("/login", checkPassword, async (요청, 응답, next) => {
   // 제출한 아이디 비번이 디비에 있는지 확인하고 있으면 세션만들어줌
   passport.authenticate("local", (error, user, info) => {
     if (error) return 응답.status(500).json(error);
@@ -278,6 +278,14 @@ app.get("/login", async (요청, 응답) => {
 app.get("/register", (요청, 응답) => {
   응답.render("register.ejs");
 });
+
+function checkPassword(요청, 응답, next) {
+  if (요청.body.username == "" || 요청.body.password == "") {
+    응답.send("그러지마세요");
+  } else {
+    next();
+  }
+}
 
 app.post("/register", async (요청, 응답) => {
   let 해시 = await bcrypt.hash(요청.body.password, 10);
