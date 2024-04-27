@@ -44,7 +44,7 @@ new MongoClient(url)
     console.log(err);
   });
 
-app.listen(8080, () => {
+app.listen(process.env.PORT, () => {
   console.log("http://localhost:8080 에서 서버 실행중");
 });
 
