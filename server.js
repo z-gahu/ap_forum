@@ -107,7 +107,7 @@ app.get("/write", (요청, 응답) => {
 });
 
 app.post("/add", upload.single("img1"), async (요청, 응답) => {
-  console.log(요청.body);
+  console.log(요청.file.location);
 
   try {
     // 제목이 비어있으면 저장안함
@@ -116,7 +116,11 @@ app.post("/add", upload.single("img1"), async (요청, 응답) => {
     } else {
       await db
         .collection("post")
-        .insertOne({ title: 요청.body.title, content: 요청.body.content });
+        .insertOne({
+          title: 요청.body.title,
+          content: 요청.body.content,
+          img: 요청.file.location,
+        });
       응답.redirect("/list");
     }
   } catch (e) {
