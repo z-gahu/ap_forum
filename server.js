@@ -48,7 +48,14 @@ app.listen(process.env.PORT, () => {
   console.log("http://localhost:8080 에서 서버 실행중");
 });
 
+function 함수(요청, 응답) {
+  if (!요청.user) {
+    응답.send("로그인하세요");
+  }
+}
+
 app.get("/", (요청, 응답) => {
+  함수(요청, 응답);
   응답.sendFile(__dirname + "/index.html");
 });
 
