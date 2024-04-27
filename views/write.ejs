@@ -8,10 +8,11 @@
 </head>
 <body class="grey-bg">
     <%- include('nav.ejs') %>
-    <form class="form-box" action="/add" method="post">
+    <form class="form-box" action="/add" method="post" enctype="multipart/form-data">
         <h4>글쓰기</h4>
         <input type="text" name="title">
         <input name="content">
+        <input type="file" name="img1" accept="image/*">
         <button type="submit">전송</button>
     </form> 
     
