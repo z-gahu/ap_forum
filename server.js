@@ -70,11 +70,19 @@ app.get("/shop", (요청, 응답) => {
   응답.send("쇼핑페이지입니다.");
 });
 
-app.get("/list", async (요청, 응답) => {
-  let result = await db.collection("post").find().toArray();
-  // 응답.render("list.ejs");
-  응답.render("list.ejs", { 글목록: result });
-});
+app.get(
+  "/list",
+  (요청, 응답, next) => {
+    let dateTime = new Date();
+    console.log(dateTime);
+    next();
+  },
+  async (요청, 응답) => {
+    let result = await db.collection("post").find().toArray();
+    // 응답.render("list.ejs");
+    응답.render("list.ejs", { 글목록: result });
+  }
+);
 
 app.get("/write", (요청, 응답) => {
   응답.render("write.ejs");
