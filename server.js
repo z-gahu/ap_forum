@@ -11,6 +11,8 @@ const LocalStrategy = require("passport-local");
 const MongoStore = require("connect-mongo");
 const { S3Client } = require("@aws-sdk/client-s3");
 const multer = require("multer");
+const multerS3 = require("multer-s3");
+
 const s3 = new S3Client({
   region: "ap-northeast-2",
   credentials: {
@@ -24,7 +26,7 @@ const upload = multer({
     s3: s3,
     bucket: process.env.S3_BUCKET,
     key: function (요청, file, cb) {
-      cb(null, Date.now().toString());
+      cb(null, Date.now().toString()); // 업로드할 이미지 파일명 설정
     },
   }),
 });
@@ -104,7 +106,7 @@ app.get("/write", (요청, 응답) => {
   응답.render("write.ejs");
 });
 
-app.post("/add", async (요청, 응답) => {
+app.post("/add", upload.single("img1"), async (요청, 응답) => {
   console.log(요청.body);
 
   try {
