@@ -106,21 +106,24 @@ app.get("/write", (요청, 응답) => {
   응답.render("write.ejs");
 });
 
-app.post("/add", upload.single("img1"), async (요청, 응답) => {
-  console.log(요청.file.location);
+app.post("/add", async (요청, 응답) => {
+  console.log(요청.file);
+
+  // 이미지 업로드 에러처리
+  upload.single("img1")(요청, 응답, (err) => {
+    if (err) return 응답.send("업로드 에러");
+  });
 
   try {
     // 제목이 비어있으면 저장안함
     if (요청.body.title == "") {
       응답.send("제목입력 안했는데?");
     } else {
-      await db
-        .collection("post")
-        .insertOne({
-          title: 요청.body.title,
-          content: 요청.body.content,
-          img: 요청.file.location,
-        });
+      await db.collection("post").insertOne({
+        title: 요청.body.title,
+        content: 요청.body.content,
+        img: 요청.file.location,
+      });
       응답.redirect("/list");
     }
   } catch (e) {
