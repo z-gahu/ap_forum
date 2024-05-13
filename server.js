@@ -58,6 +58,8 @@ app.use("/list", (요청, 응답, next) => {
   next();
 });
 
+app.use("/", require("./routes/shop.js"));
+
 let db;
 const url = process.env.MONGO_URL;
 new MongoClient(url)
@@ -333,3 +335,11 @@ app.post("/register", async (요청, 응답) => {
     응답.redirect("/");
   }
 });
+
+// app.get("/shop/shirts", (요청, 응답) => {
+//   응답.send(" 셔츠 파는 페이지 입니다.");
+// });
+
+// app.get("/shop/pants", (요청, 응답) => {
+//   응답.send(" 바지 파는 페이지 입니다.");
+// });
