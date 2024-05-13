@@ -58,7 +58,7 @@ app.use("/list", (요청, 응답, next) => {
   next();
 });
 
-app.use("/", require("./routes/shop.js"));
+app.use("/shop", require("./routes/shop.js"));
 
 let db;
 const url = process.env.MONGO_URL;
