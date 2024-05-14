@@ -60,10 +60,10 @@ app.use("/list", (요청, 응답, next) => {
 
 app.use("/shop", require("./routes/shop.js"));
 
+let connectDB = require("./database.js");
+
 let db;
-const url = process.env.MONGO_URL;
-new MongoClient(url)
-  .connect()
+connectDB
   .then((client) => {
     console.log("DB연결성공");
     db = client.db("forum");
