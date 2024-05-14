@@ -59,6 +59,7 @@ app.use("/list", (요청, 응답, next) => {
 });
 
 app.use("/shop", require("./routes/shop.js"));
+app.use("/", require("./routes/board.js"));
 
 let connectDB = require("./database.js");
 
@@ -342,4 +343,11 @@ app.post("/register", async (요청, 응답) => {
 
 // app.get("/shop/pants", (요청, 응답) => {
 //   응답.send(" 바지 파는 페이지 입니다.");
+// });
+
+// app.get("/board/sub/sports", checkLogin, (요청, 응답) => {
+//   응답.send("스포츠 게시판");
+// });
+// app.get("/board/sub/game", checkLogin, (요청, 응답) => {
+//   응답.send("게임 게시판");
 // });
