@@ -361,7 +361,7 @@ app.get("/search", async (요청, 응답) => {
 
   let result = await db
     .collection("post")
-    .find({ title: { $regex: 요청.query.val } })
+    .find({ $text: { $search: "안녕" } })
     .toArray();
   console.log("result", result);
   응답.render("search.ejs", { 글목록: result });
