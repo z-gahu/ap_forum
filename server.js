@@ -359,11 +359,22 @@ app.get("/search", async (요청, 응답) => {
   //   .find({ title: 요청.query.val })
   //   .toArray();
 
-  let result = await db
-    .collection("post")
-    .find({ $text: { $search: "안녕" } })
-    .toArray();
+  // let result = await db
+  //   .collection("post")
+  //   .find({ $text: { $search: "안녕" } })
+  //   .toArray();
   // .explain("executionStats"); // 실행계획
+
+  // search index( full text index)만들기 -> 속도 정확한 단어
+  let 검색조건 = [
+    {
+      $search: {
+        index: "title_index",
+        text: { query: 요청.query.val, path: "title" },
+      },
+    },
+  ];
+  let result = await db.collection("post").aggregate(검색조건).toArray();
 
   console.log("result", result);
   응답.render("search.ejs", { 글목록: result });
