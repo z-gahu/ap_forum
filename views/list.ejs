@@ -12,7 +12,12 @@
     <input class="search">    
     <button class="search-send">검색</button>
 
-
+    <script>
+        document.querySelector('.search-send').addEventListener('click', function(){
+            let 입력한거 = document.querySelector('.search').value;// input 에 입력한값
+            location.href = '/search?val='+ 입력한거
+        })
+    </script>
 
     <% for (var i =0; i< 글목록.length; i++){ %>
         <div class="white-bg">
