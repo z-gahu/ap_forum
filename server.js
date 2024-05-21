@@ -354,9 +354,14 @@ app.post("/register", async (요청, 응답) => {
 
 app.get("/search", async (요청, 응답) => {
   console.log(요청.query.val);
+  // let result = await db
+  //   .collection("post")
+  //   .find({ title: 요청.query.val })
+  //   .toArray();
+
   let result = await db
     .collection("post")
-    .find({ title: 요청.query.val })
+    .find({ title: { $regex: 요청.query.val } })
     .toArray();
   console.log("result", result);
   응답.render("search.ejs", { 글목록: result });
