@@ -373,6 +373,8 @@ app.get("/search", async (요청, 응답) => {
         text: { query: 요청.query.val, path: "title" },
       },
     },
+    { $sort: { _id: 1 } }, //_id필드 정렬
+    { $limit: 10 },
   ];
   let result = await db.collection("post").aggregate(검색조건).toArray();
 
