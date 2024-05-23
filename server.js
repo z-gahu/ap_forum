@@ -110,6 +110,7 @@ app.get("/write", (요청, 응답) => {
 });
 
 app.post("/add", upload.single("img1"), async (요청, 응답) => {
+  console.log(요청.user);
   try {
     // 이미지 업로드 에러처리
     // upload.single("img1")(요청, 응답, (err) => {
@@ -124,7 +125,9 @@ app.post("/add", upload.single("img1"), async (요청, 응답) => {
       await db.collection("post").insertOne({
         title: 요청.body.title,
         content: 요청.body.content,
-        img: 요청.file.location,
+        img: 요청.file ? 요청.file.location : "",
+        user: 요청.user._id, // 유저의아이디
+        username: 요청.user.username, //
       });
       응답.redirect("/list");
     }
