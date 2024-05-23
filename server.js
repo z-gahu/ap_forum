@@ -195,11 +195,13 @@ app.get("/abc", async (요청, 응답) => {
 
 app.delete("/delete", async (요청, 응답) => {
   //db에 있는 글 삭제
-  console.log(요청.query);
+  console.log(요청.query, 요청.user._id);
   try {
-    await db
-      .collection("post")
-      .deleteOne({ _id: new ObjectId(요청.query.docid) });
+    await db.collection("post").deleteOne({
+      _id: new ObjectId(요청.query.docid),
+      user: new ObjectId(요청.user._id),
+    });
+    console.log("삭제완료");
     응답.send("삭제완료");
   } catch (error) {
     console.log("삭제실패");
