@@ -102,7 +102,9 @@ app.get("/shop", (요청, 응답) => {
 app.get("/list", async (요청, 응답) => {
   let result = await db.collection("post").find().toArray();
   // 응답.render("list.ejs");
-  응답.render("list.ejs", { 글목록: result });
+  console.log("리스트 결과:", result);
+  console.log("유저 결과:", 요청.user);
+  응답.render("list.ejs", { 글목록: result, 유저: 요청.user });
 });
 
 app.get("/write", (요청, 응답) => {
@@ -165,16 +167,20 @@ app.get("/edit/:id", async (요청, 응답) => {
 app.post("/edit", async (요청, 응답) => {
   try {
     console.log(요청.body);
-    let result = await db
-      .collection("post")
-      .updateOne(
-        { _id: new ObjectId(요청.body.id) },
-        { $set: { title: 요청.body.title, content: 요청.body.content } }
-      );
+    let result = await db.collection("post").updateOne(
+      { _id: new ObjectId(요청.body.id), user: new ObjectId(요청.user._id) },
+      {
+        $set: {
+          title: 요청.body.title,
+          content: 요청.body.content,
+          // user: 요청.user._id, // 유저의아이디
+        },
+      }
+    );
     console.log(result);
     응답.redirect("/list");
   } catch (e) {
-    console.log("저장실패");
+    console.log("수정실패", e);
   }
 
   // let result = await db
