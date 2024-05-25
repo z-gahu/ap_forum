@@ -27,8 +27,8 @@
                     <a href="/detail/<%= 글목록[i]._id %>"><%= 글목록[i].title %></a>
                     <% if(String(글목록[i].user) == String(유저._id)) {%>
                         <a href="/edit/<%= 글목록[i]._id %>">✏️</a>
-                    <span class="delete" data-id="<%= 글목록[i]._id %>">🗑️</span>
                     <% } %>
+                    <span class="delete" data-id="<%= 글목록[i]._id %>">🗑️</span>
                 </h4>
                 <p><%= 글목록[i].content %></p>
             </div>
@@ -57,9 +57,16 @@
                 .then((r)=> r.text())  // 왜 괄호가 없지?
                 .then((result)=>{
                     //성공시 실행할 코드
-                    // console.log(result)
+                    console.log('글목록 보여주기 결과:',result)
                     //삭제완료시 상위 요소 안보이게 하기
-                    e.target.parentElement.parentElement.style.display = 'none'
+                    if(result != "error"){
+                        console.log('프론트 삭제성공')
+                        e.target.parentElement.parentElement.style.display = 'none'
+                    }else{
+                        console.log('프론트 삭제 실패')
+                        alert('삭제실패')
+                    }
+
                 })
                 .catch((error)=>{
                     //인터넷문제 등으로 실패시 실행할 코드

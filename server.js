@@ -201,16 +201,21 @@ app.get("/abc", async (요청, 응답) => {
 
 app.delete("/delete", async (요청, 응답) => {
   //db에 있는 글 삭제
-  console.log(요청.query, 요청.user._id);
+  console.log("delete 실행: ", 요청.query, 요청.user._id);
   try {
-    await db.collection("post").deleteOne({
+    const deleteResult = await db.collection("post").deleteOne({
       _id: new ObjectId(요청.query.docid),
       user: new ObjectId(요청.user._id),
     });
-    console.log("삭제완료");
-    응답.send("삭제완료");
+    console.log("삭제완료(deleteResult):", deleteResult);
+    if (deleteResult.deletedCount === 0) {
+      return 응답.status(404).send("error");
+    } else {
+      응답.send("삭제완료");
+    }
   } catch (error) {
-    console.log("삭제실패");
+    console.log("삭제실패", error);
+    응답.status(500).send("삭제에 실패했습니다.");
   }
 });
 
