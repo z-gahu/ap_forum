@@ -397,3 +397,17 @@ app.get("/search", async (요청, 응답) => {
   console.log("result", result);
   응답.render("search.ejs", { 글목록: result });
 });
+
+app.post("/comment", async (요청, 응답) => {
+  try {
+    let result = await db.collection("comment").insertOne({
+      content: 요청.body.content,
+      writerId: new ObjectId(요청.user._id),
+      writer: 요청.user.username,
+      parentId: new ObjectId(요청.body.parentId),
+    });
+    응답.redirect("back");
+  } catch (error) {
+    console.log(error);
+  }
+});
