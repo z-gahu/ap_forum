@@ -12,6 +12,15 @@
     <div class="detail-bg">
         <h4><%= result.title %></h4>
         <p><%= result.content %></p>
+        <hr style="margin-top: 60px">
+        <div>
+            <p><strong>작성자</strong> 댓글내용</p>
+        </div>
+        <form action="/comment" method="post">
+            <input name="content">
+            <input name="parentId" value="<%= result._id %>" style="display: none;">
+            <button type="submit">댓글작성</button>
+        </form>
     </div>
     
   </body>
