@@ -21,6 +21,12 @@
             <input name="parentId" value="<%= result._id %>" style="display: none;">
             <button type="submit">댓글작성</button>
         </form>
+        <% for(let i=0; i< result2.length; i++) { %>
+            <p>
+                <strong><%= result2[i].write %></strong>
+                <%= result2[i].content %>
+            </p>
+        <% } %>
     </div>
     
   </body>

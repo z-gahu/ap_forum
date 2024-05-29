@@ -406,8 +406,18 @@ app.post("/comment", async (요청, 응답) => {
       writer: 요청.user.username,
       parentId: new ObjectId(요청.body.parentId),
     });
-    응답.redirect("back");
+    응답.redirect("back"); // 이전페이지 detail 페이지
   } catch (error) {
     console.log(error);
   }
+});
+
+app.get("/detail/:id", async (요청, 응답) => {
+  let result = await db
+    .collection("post")
+    .findOne({ _id: new ObjectId(요청.params.id) });
+  let result2 = await db
+    .collection("comment")
+    .find({ parentId: new ObjectId(요청.params.id).toArray });
+  응답.render("detail.ejs", { result: result, result2: result2 });
 });
