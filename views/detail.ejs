@@ -14,19 +14,19 @@
         <p><%= result.content %></p>
         <hr style="margin-top: 60px">
         <div>
-            <p><strong>작성자</strong> 댓글내용</p>
+        <% for(let i=0; i< result2.length; i++) { %>
+            <p>
+                <strong><%= result2[i].writer %></strong>
+                <%= result2[i].content %>
+            </p>
+        <% } %>
         </div>
         <form action="/comment" method="post">
             <input name="content">
             <input name="parentId" value="<%= result._id %>" style="display: none;">
             <button type="submit">댓글작성</button>
         </form>
-        <% for(let i=0; i< result2.length; i++) { %>
-            <p>
-                <strong><%= result2[i].write %></strong>
-                <%= result2[i].content %>
-            </p>
-        <% } %>
+
     </div>
     
   </body>
