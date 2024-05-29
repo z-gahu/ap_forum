@@ -139,21 +139,35 @@ app.post("/add", upload.single("img1"), async (요청, 응답) => {
   }
 });
 
+// app.get("/detail/:id", async (요청, 응답) => {
+//   try {
+//     // console.log(요청.params);
+//     let result = await db
+//       .collection("post")
+//       .findOne({ _id: new ObjectId(요청.params.id) });
+//     console.log(result);
+//     if (result == null) {
+//       응답.status(404).send("이상한 url입력함");
+//     }
+//     응답.render("detail.ejs", { result: result });
+//   } catch (e) {
+//     console.log(e);
+//     응답.status(404).send("이상한 url입력함");
+//   }
+// });
+
 app.get("/detail/:id", async (요청, 응답) => {
-  try {
-    console.log(요청.params);
-    let result = await db
-      .collection("post")
-      .findOne({ _id: new ObjectId(요청.params.id) });
-    console.log(result);
-    if (result == null) {
-      응답.status(404).send("이상한 url입력함");
-    }
-    응답.render("detail.ejs", { result: result });
-  } catch (e) {
-    console.log(e);
-    응답.status(404).send("이상한 url입력함");
-  }
+  let result = await db
+    .collection("post")
+    .findOne({ _id: new ObjectId(요청.params.id) });
+
+  let result2 = await db
+    .collection("comment")
+    .find({ parentId: new ObjectId(요청.params.id) })
+    .toArray();
+
+  console.log("detail 확인입니다.=============================", result2);
+  응답.render("detail.ejs", { result: result, result2: result2 });
 });
 
 app.get("/edit/:id", async (요청, 응답) => {
@@ -394,7 +408,7 @@ app.get("/search", async (요청, 응답) => {
   ];
   let result = await db.collection("post").aggregate(검색조건).toArray();
 
-  console.log("result", result);
+  // console.log("result", result);
   응답.render("search.ejs", { 글목록: result });
 });
 
@@ -410,14 +424,4 @@ app.post("/comment", async (요청, 응답) => {
   } catch (error) {
     console.log(error);
   }
-});
-
-app.get("/detail/:id", async (요청, 응답) => {
-  let result = await db
-    .collection("post")
-    .findOne({ _id: new ObjectId(요청.params.id) });
-  let result2 = await db
-    .collection("comment")
-    .find({ parentId: new ObjectId(요청.params.id).toArray });
-  응답.render("detail.ejs", { result: result, result2: result2 });
 });
