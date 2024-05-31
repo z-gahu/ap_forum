@@ -23,7 +23,7 @@
         <div class="white-bg">
             <div class="list-box">
                 <h4>
-                    <%= 유저._id %> <%= 글목록[i].user %> 
+                    <!-- <%= 유저._id %> <%= 글목록[i].user %>  -->
                     <a href="/detail/<%= 글목록[i]._id %>"><%= 글목록[i].title %></a>
                     <% if(String(글목록[i].user) == String(유저._id)) {%>
                         <a href="/edit/<%= 글목록[i]._id %>">✏️</a>
