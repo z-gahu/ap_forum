@@ -425,3 +425,24 @@ app.post("/comment", async (요청, 응답) => {
     console.log(error);
   }
 });
+
+app.get("/chat/request", async (요청, 응답) => {
+  //  db에 document 발행
+  db.collection("chatroom").insertOne({
+    member: [요청.user._id, new ObjectId(요청.query.writerId)], //[요청한 사람Id, 글쓴이]
+    date: new Date(),
+  });
+  응답.redirect("/chat/list"); //채팅방 목록페이지이동
+});
+
+//채팅방 목록
+app.get("/chat/list", async (요청, 응답) => {
+  // 내가속한 채팅방만 꺼내오기
+  let result = await db
+    .collection("chatroom")
+    .find({
+      member: 요청.user._id,
+    })
+    .toArray();
+  응답.render("chatList.ejs", { result: result });
+});
