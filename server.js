@@ -446,3 +446,15 @@ app.get("/chat/list", async (요청, 응답) => {
     .toArray();
   응답.render("chatList.ejs", { result: result });
 });
+
+//채팅방 상세
+app.get("/chat/detail/:id", async (요청, 응답) => {
+  //채팅방 id로 찾기
+  let result = await db
+    .collection("chatroom")
+    .find({
+      _id: new ObjectId(요청._id),
+    })
+    .toArray();
+  응답.render("chatDetail.ejs", { result: result });
+});
