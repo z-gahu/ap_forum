@@ -13,6 +13,11 @@ const { S3Client } = require("@aws-sdk/client-s3");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const server = createServer(app);
+const io = new Server(server);
+
 const s3 = new S3Client({
   region: "ap-northeast-2",
   credentials: {
@@ -68,14 +73,13 @@ connectDB
   .then((client) => {
     console.log("DB연결성공");
     db = client.db("forum");
+    server.listen(process.env.PORT, () => {
+      console.log("http://localhost:8080 에서 서버 실행중");
+    });
   })
   .catch((err) => {
     console.log(err);
   });
-
-app.listen(process.env.PORT, () => {
-  console.log("http://localhost:8080 에서 서버 실행중");
-});
 
 function checkLogin(요청, 응답, next) {
   if (!요청.user) {
@@ -166,7 +170,10 @@ app.get("/detail/:id", async (요청, 응답) => {
     .find({ parentId: new ObjectId(요청.params.id) })
     .toArray();
 
-  console.log("detail 확인입니다.=============================", result2);
+  console.log(
+    "글목록 detail 확인입니다.=============================",
+    result2
+  );
   응답.render("detail.ejs", { result: result, result2: result2 });
 });
 
@@ -449,12 +456,19 @@ app.get("/chat/list", async (요청, 응답) => {
 
 //채팅방 상세
 app.get("/chat/detail/:id", async (요청, 응답) => {
-  //채팅방 id로 찾기
-  let result = await db
-    .collection("chatroom")
-    .find({
-      _id: new ObjectId(요청._id),
-    })
-    .toArray();
-  응답.render("chatDetail.ejs", { result: result });
+  try {
+    //숙제 현재 로그인 중인 유저가 이 채팅방에 속해 있나 검사
+    console.log("채팅방상세 유저ID", 요청.user._id);
+
+    //채팅방 id로 찾기
+    let result = await db
+      .collection("chatroom")
+      .find({
+        _id: new ObjectId(요청._id),
+      })
+      .toArray();
+    응답.render("chatDetail.ejs", { result: result });
+  } catch (error) {
+    console.log(error);
+  }
 });
