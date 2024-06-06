@@ -492,4 +492,14 @@ io.on("connection", (socket) => {
     console.log(data);
     io.to(data.room).emit("broadcast", data.msg);
   });
+
+  // 채팅기능만들기3(socket.io) 숙제
+  // 실시간 채팅기능 만들어 오기
+  // 1. 채팅방에 상세페이지 접속시 room에 넣어주기
+  // 2. 유저가 메세지 전송하면 같은 룸에 전달
+  // 참고) 유저 로그인 정보 출력도 가능
+  // https://socket.io/how-to/use-with-express-session
+  // socket.request.session 출력시 유저 로그인정보가 들어있음
+  // 현재 메세지 보내는 유저가 누구인지 확인가능 -> 아마 쿠키를 전송해서 확인하는 방식
+  // passport 안쓰면 웹소켓 메세지 전송시 쿠키도 전송해서 열어봐야 합니다.
 });
