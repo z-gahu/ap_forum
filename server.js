@@ -481,5 +481,15 @@ io.on("connection", (socket) => {
   });
 
   // 서버-> 모든유저
-  io.emit("name", "kim");
+  // io.emit("name", "kim"); // 모든 유저에게 전송
+
+  socket.on("ask-join", (data) => {
+    // room 기능 사용
+    socket.join(data); //룸생성. 서버만 가능
+  });
+
+  socket.on("message", (data) => {
+    console.log(data);
+    io.to(data.room).emit("broadcast", data.msg);
+  });
 });
