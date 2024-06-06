@@ -472,3 +472,14 @@ app.get("/chat/detail/:id", async (요청, 응답) => {
     console.log(error);
   }
 });
+
+// 웹소켓 연결시 특성 코드 실행
+io.on("connection", (socket) => {
+  // 수신하는 코드(유저가 보낸것)
+  socket.on("age", (data) => {
+    console.log("유저가 보낸거", data);
+  });
+
+  // 서버-> 모든유저
+  io.emit("name", "kim");
+});
