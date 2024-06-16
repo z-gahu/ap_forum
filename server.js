@@ -458,15 +458,16 @@ app.get("/chat/list", async (요청, 응답) => {
 app.get("/chat/detail/:id", async (요청, 응답) => {
   try {
     //숙제 현재 로그인 중인 유저가 이 채팅방에 속해 있나 검사
-    console.log("채팅방상세 유저ID", 요청.user._id);
+    console.log("채팅방상세 유저ID", 요청.params.id);
 
     //채팅방 id로 찾기
     let result = await db
       .collection("chatroom")
       .find({
-        _id: new ObjectId(요청._id),
+        _id: new ObjectId(요청.params.id),
       })
       .toArray();
+    console.log("채팅방상세:", result);
     응답.render("chatDetail.ejs", { result: result });
   } catch (error) {
     console.log(error);
