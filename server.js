@@ -503,4 +503,15 @@ io.on("connection", (socket) => {
   // socket.request.session 출력시 유저 로그인정보가 들어있음
   // 현재 메세지 보내는 유저가 누구인지 확인가능 -> 아마 쿠키를 전송해서 확인하는 방식
   // passport 안쓰면 웹소켓 메세지 전송시 쿠키도 전송해서 열어봐야 합니다.
+
+  socket.on("ask-join", async (data) => {
+    socket.join(data);
+  });
+
+  // 추가 작업 필요
+  //   물론 자기랑 관련없는 room에 들어가려는 악성 유저도 있을텐데
+  // 그건 여러분들이 룸 조인시켜주기 전에 DB조회부터 해보면 됩니다
+  // 저번 시간에 언급했던 passport + socket.io 셋팅을 해놓으면
+  // 서버에서 socket.request.session 이라고 출력해보면 현재 로그인된 유저 정보가 나옵니다.
+  // 그래서 이런 현재 유저가 채팅방 document에 기재되어 있는지부터 확인하고 룸에 집어넣어봅시다.
 });
