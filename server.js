@@ -461,12 +461,10 @@ app.get("/chat/detail/:id", async (요청, 응답) => {
     console.log("채팅방상세 유저ID", 요청.params.id);
 
     //채팅방 id로 찾기
-    let result = await db
-      .collection("chatroom")
-      .find({
-        _id: new ObjectId(요청.params.id),
-      })
-      .toArray();
+    let result = await db.collection("chatroom").findOne({
+      _id: new ObjectId(요청.params.id),
+    });
+    // .toArray();
     console.log("채팅방상세:", result);
     응답.render("chatDetail.ejs", { result: result });
   } catch (error) {
@@ -514,4 +512,8 @@ io.on("connection", (socket) => {
   // 저번 시간에 언급했던 passport + socket.io 셋팅을 해놓으면
   // 서버에서 socket.request.session 이라고 출력해보면 현재 로그인된 유저 정보가 나옵니다.
   // 그래서 이런 현재 유저가 채팅방 document에 기재되어 있는지부터 확인하고 룸에 집어넣어봅시다.
+
+  socket.on("message-send", (data) => {
+    console.log(data);
+  });
 });
