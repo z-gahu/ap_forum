@@ -69,10 +69,15 @@ app.use("/", require("./routes/board.js"));
 let connectDB = require("./database.js");
 
 let db;
+let changeStream;
 connectDB
   .then((client) => {
     console.log("DB연결성공");
     db = client.db("forum");
+
+    let 조건 = [{ $match: { operationType: "insert" } }];
+    changeStream = db.collection("post").watch(조건);
+
     server.listen(process.env.PORT, () => {
       console.log("http://localhost:8080 에서 서버 실행중");
     });
@@ -516,8 +521,11 @@ app.get("/stream/list", (요청, 응답) => {
     "content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
   });
-  setInterval(() => {
+
+  changeStream.on("change", (result) => {
+    console.log(result.fullDocument);
+
     응답.write("event: msg\n");
-    응답.write("data: 바보1111\n\n");
-  }, 1000);
+    응답.write(`data: ${JSON.stringify(result.fullDocument)}\n\n`);
+  });
 });
