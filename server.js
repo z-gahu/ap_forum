@@ -509,3 +509,15 @@ io.on("connection", (socket) => {
   // 서버에서 socket.request.session 이라고 출력해보면 현재 로그인된 유저 정보가 나옵니다.
   // 그래서 이런 현재 유저가 채팅방 document에 기재되어 있는지부터 확인하고 룸에 집어넣어봅시다.
 });
+
+app.get("/stream/list", (요청, 응답) => {
+  응답.writeHead(200, {
+    Connection: "keep-alive",
+    "content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+  });
+  setInterval(() => {
+    응답.write("event: msg\n");
+    응답.write("data: 바보1111\n\n");
+  }, 1000);
+});

@@ -77,5 +77,11 @@
         }
     </script>
   
+  <script>
+    let eventSource = new EventSource('/stream/list')
+    eventSource.addEventListener('msg', function(e){
+        console.log(e.data)
+    })
+  </script>
   </body>
 </html>
