@@ -59,7 +59,7 @@ app.use(
 app.use(passport.session());
 
 app.use("/list", (요청, 응답, next) => {
-  console.log(new Date());
+  // console.log(new Date());
   next();
 });
 
@@ -106,8 +106,8 @@ app.get("/shop", (요청, 응답) => {
 app.get("/list", async (요청, 응답) => {
   let result = await db.collection("post").find().toArray();
   // 응답.render("list.ejs");
-  console.log("리스트 결과:", result);
-  console.log("유저 결과:", 요청.user);
+  // console.log("리스트 결과:", result);
+  // console.log("유저 결과:", 요청.user);
   응답.render("list.ejs", { 글목록: result, 유저: 요청.user });
 });
 
@@ -116,7 +116,7 @@ app.get("/write", (요청, 응답) => {
 });
 
 app.post("/add", upload.single("img1"), async (요청, 응답) => {
-  console.log(요청.user);
+  // console.log(요청.user);
   try {
     // 이미지 업로드 에러처리
     // upload.single("img1")(요청, 응답, (err) => {
@@ -170,10 +170,7 @@ app.get("/detail/:id", async (요청, 응답) => {
     .find({ parentId: new ObjectId(요청.params.id) })
     .toArray();
 
-  console.log(
-    "글목록 detail 확인입니다.=============================",
-    result2
-  );
+  // console.log("글목록 detail 확인입니다.=============================",result2);
   응답.render("detail.ejs", { result: result, result2: result2 });
 });
 
@@ -181,13 +178,13 @@ app.get("/edit/:id", async (요청, 응답) => {
   let result = await db
     .collection("post")
     .findOne({ _id: new ObjectId(요청.params.id) });
-  console.log(result);
+  // console.log(result);
   응답.render("edit.ejs", { result: result });
 });
 
 app.post("/edit", async (요청, 응답) => {
   try {
-    console.log(요청.body);
+    // console.log(요청.body);
     let result = await db.collection("post").updateOne(
       { _id: new ObjectId(요청.body.id), user: new ObjectId(요청.user._id) },
       {
@@ -198,7 +195,7 @@ app.post("/edit", async (요청, 응답) => {
         },
       }
     );
-    console.log(result);
+    // console.log(result);
     응답.redirect("/list");
   } catch (e) {
     console.log("수정실패", e);
@@ -211,7 +208,7 @@ app.post("/edit", async (요청, 응답) => {
 });
 
 app.post("/abc", async (요청, 응답) => {
-  console.log("안녕");
+  // console.log("안녕");
   console.log(요청.params);
 });
 
@@ -222,13 +219,13 @@ app.get("/abc", async (요청, 응답) => {
 
 app.delete("/delete", async (요청, 응답) => {
   //db에 있는 글 삭제
-  console.log("delete 실행: ", 요청.query, 요청.user._id);
+  // console.log("delete 실행: ", 요청.query, 요청.user._id);
   try {
     const deleteResult = await db.collection("post").deleteOne({
       _id: new ObjectId(요청.query.docid),
       user: new ObjectId(요청.user._id),
     });
-    console.log("삭제완료(deleteResult):", deleteResult);
+    // console.log("삭제완료(deleteResult):", deleteResult);
     if (deleteResult.deletedCount === 0) {
       return 응답.status(404).send("error");
     } else {
@@ -300,7 +297,7 @@ passport.use(
 
 // 로그인시 세션만들기
 passport.serializeUser((user, done) => {
-  console.log("user:", user);
+  // console.log("user:", user);
   process.nextTick(() => {
     // 내부코드를 비동기적으로 처리해줌
     done(null, { id: user._id, username: user.username }); // 요청.logIn()을 쓰면 자동실행됨
@@ -338,7 +335,7 @@ app.post("/login", checkPassword, async (요청, 응답, next) => {
 });
 
 app.get("/login", async (요청, 응답) => {
-  console.log(요청.user);
+  // console.log(요청.user);
   응답.render("login.ejs");
 });
 
@@ -390,7 +387,7 @@ app.post("/register", async (요청, 응답) => {
 // });
 
 app.get("/search", async (요청, 응답) => {
-  console.log(요청.query.val);
+  // console.log(요청.query.val);
   // let result = await db
   //   .collection("post")
   //   .find({ title: 요청.query.val })
@@ -457,8 +454,8 @@ app.get("/chat/list", async (요청, 응답) => {
 //채팅방 상세
 app.get("/chat/detail/:id", async (요청, 응답) => {
   try {
-    //숙제 현재 로그인 중인 유저가 이 채팅방에 속해 있나 검사
-    console.log("채팅방상세 유저ID", 요청.params.id);
+    // TODO 숙제 현재 로그인 중인 유저가 이 채팅방에 속해 있나 검사
+    // console.log("채팅방상세 유저ID", 요청.params.id);
 
     //채팅방 id로 찾기
     let result = await db.collection("chatroom").findOne({
@@ -487,7 +484,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("message-send", (data) => {
-    console.log(data);
+    // console.log(data);
     io.to(data.room).emit("message-broadcast", data.msg);
   });
 
