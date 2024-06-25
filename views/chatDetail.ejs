@@ -36,12 +36,19 @@
       // -> 서버에게 룸에 메세지를 전달하라고 부탁
       // -> 서버는 부탁받으면 룸에 뿌림
       document.querySelector(".chat-button").addEventListener('click', function(){
-        socket.emit('message', {
-          msg: '반가워',
-          room: '1'
+        let 작성한거 = document.querySelector('.chat-input').value
+        socket.emit('message-send', {
+          msg: 작성한거,
+          room: '<%= result._id %>'
         })
       })
 
+      socket.on('message-broadcast', (data)=>{
+        //Todo db 에 저장. 채팅내용, 날짜, 부모, 도큐id...
+        document.querySelector('.chat-screen').insertAdjacentHTML(
+          'beforeend', `<div class="chat-box"><span>${data}</span></div>`
+        )
+      })
 
       //수신
       socket.on('name', (data)=>{

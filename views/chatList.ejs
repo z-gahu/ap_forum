@@ -13,7 +13,7 @@
         <% for (var i =0; i< result.length; i++){ %>
                 <div class="list-box">
                     <h4>
-                        <!-- <%= JSON.stringify(result[i])  %> -->
+                        <%= JSON.stringify(result[i])  %>
                         <a href="/chat/detail/<%= result[i]._id %>">채팅방 <%= i %></a>
                     </h4>
                     <p><%= result[i].content %></p>
